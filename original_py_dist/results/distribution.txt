@@ -1,0 +1,72 @@
+general idea:
+every new wallet found = X coins (eg, 100 coins)
+
+to find new wallet:
+* use iterated hash
+* check for collision against every existing wallet
+
+to check for collision:
+* start with first wallet, and iterate hash through all wallets
+* check whether there is any digit position match in result
+* if there is a match, you have a collision and need to start over
+
+in general, to check if there is a collision against wallet N:
+- start with hash against wallet N plus your iterated candidate as a salt
+
+you've found a new wallet when you find a candidate that produces no collisions :)
+
+how to adjust difficulty:
+* can increase amount of iterations if wallets are being found too quickly
+* or, can increase the amount of space
+
+complexity:
+using iterated hash: O(1)
+iterating a hash through all wallets: O(N)
+number of times you'll need to start over: O(N) ?
+* total is O(N^2)
+
+suppose the algorithm is finding wallets ahead of schedule:
+* increase number of hash iterations?
+- this is the way to do it; processing power should hold pretty steady
+[] come up with a formula
+
+100 billion * 256 bits = 3.2 Tb, not all that much memory
+
+[] TODO: simplify, debug, make sure not too many wallets can be generated
+---------------------------------------------------------------------------------------------------
+to find new wallet:
+* generate candidate (random hexdigest)
+
+for each existing wallet:
+* check whether candidate collides with the wallet
+
+* a candidate collides with a wallet if there is any n-digit position match for some predefined n
+    - eg, for a 1-digit hex match there are 16 possible wallets
+        for a 2-digit hex match there are 16^2 = 256 possible wallets, etc
+
+if the candidate does not collide with any existing wallets, then it can be a new wallet
+
+ISSUE: You don't have to brute force this to mine; you can just construct a candidate with a 
+    missing n-digit for each position
+    - No, you can't actually do that since a candidate is a hash of a random string
+    - however, you can save significant amounts of memory by keeping a set of missing n-digits
+        at each position
+
+    Thus, it would be nice to check against the *hash* of an existing wallet rather than the wallet itself
+    - just salt the hash with your candidate so the hash is always different
+
+    Problem is that this method doesn't limit the number of wallets as easily
+    SOLUTION: Check collision against the wallet AND the hash of the wallet
+        candidate can collide with any wallet OR the salted hash of said wallet
+        thus, every wallet must be checked regardless of whether the candidate collides with
+            the wallet itself
+
+Two changes:
+[] use overlaps while checking for collisions
+[] use two hash iterations per candidate check instead of 1
+
+ISSUE:
+[x] need to ensure that no wallet "shortage" will ever occur
+* could actually introduce a penalty for registering wallets
+    - incentivize people to mine without registering additional wallets
+    * give people a reward of 1.05 for mining on same wallet vs 1.0 for creating new wallet
