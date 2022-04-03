@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/Eratosthenes/distribution/passw"
+	"github.com/programmedtorun/key_mgmt/passw"
 	"github.com/stretchr/testify/assert"
 )
 

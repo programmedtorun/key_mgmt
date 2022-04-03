@@ -41,7 +41,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Eratosthenes/distribution/candidate"
+	"github.com/programmedtorun/key_mgmt/candidate"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

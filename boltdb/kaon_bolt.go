@@ -1,8 +1,8 @@
 /*
-TODO:
-[ ] Ask Nate will the kaon stashes exist as keys and the values be found or not found booleans?
-ISSUES:
-[ ] An issue
+This file has Go driver functions for boltdb, an embeded key -> value
+data store for Go. Boltdb will likely be the database we use for the
+Haystack data structure. The Haystack is used for storing Kaon stashes
+that have been minted. Bolt db is not yet implemented.
 */
 package boltdb
 
@@ -12,8 +12,6 @@ import (
 
 	"github.com/boltdb/bolt"
 )
-
-// This file has Go driver functions for boltdb
 
 var haystckValue string
 
@@ -48,7 +46,7 @@ func UpdateHaystack(bucket, key, value string) error {
 func ViewValue(bucket string, key string) error {
 	db, err := bolt.Open("./boltdb/haystack.db", 0600, nil)
 	if err != nil {
-		// log.Fatal(err)
+		log.Fatal(err)
 		return err
 	}
 	db.View(func(tx *bolt.Tx) error {
@@ -63,11 +61,11 @@ func ViewValue(bucket string, key string) error {
 		haystckValue = string(value)
 		return nil
 	}); err != nil {
-		// log.Fatal(err)
+		log.Fatal(err)
 		return err
 	}
 	if err := db.Close(); err != nil {
-		// log.Fatal(err)
+		log.Fatal(err)
 		return err
 	}
 	return nil

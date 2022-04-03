@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Eratosthenes/distribution/cli"
+import "github.com/programmedtorun/key_mgmt/cli"
 
 func main() {
 

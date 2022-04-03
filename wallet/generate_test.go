@@ -25,16 +25,16 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/Eratosthenes/distribution/mint"
+	"github.com/programmedtorun/key_mgmt/mint"
 	// "github.com/Eratosthenes/distribution/utils"
 )
 
 const (
-	TEST_PASS_PHRASE  = "hiImaPassPhrase123!"
-	T_KEY_LENGTH      = 32
-	PK_TEST_FILE      = "ztemp.txt" // A private key test file string
-	ENTER             = "\n"
-	ZERO              = "0"
+	TEST_PASS_PHRASE = "hiImaPassPhrase123!"
+	T_KEY_LENGTH     = 32
+	PK_TEST_FILE     = "ztemp.txt" // A private key test file string
+	ENTER            = "\n"
+	ZERO             = "0"
 )
 
 var private_key_filename string
