@@ -32,7 +32,7 @@ const (
 	PRIVATE_KEY_FILE_DIR     = "./private_key"
 	FILE_NAME_EXISTS_MSG     = "\nThat file name already exists within the private key directory, file name must be unique.\nPlease enter a simple name for your file, the file extention '.txt' will be appended to the end of your file name. Type 'e' to exit.\n> "
 	SELECT_DIR_RETRIES       = 4
-	FILE_SELECTION_MSG       = "Options:\n-> Type the NUMBER of the wallet you wish to use to mint KAON.\n-> Type 'c' to create a new wallet file.\n-> Type 'cp' to change your pass phrasetype.\n-> Type 'e' to exit.\n> "
+	FILE_SELECTION_MSG       = "Options:\n-> Type the NUMBER of the wallet you wish to use to mint KAON.\n-> Type 'c' to create a new wallet file.\n-> Type 'cp' to change your password.\n-> Type 'e' to exit.\n> "
 	CHANGE_PASS_PHRASE       = "cp"
 	CHANGE_PASS_PROMPT       = "Select the NUMBER of the wallet file for which you'd like to change the pass phrase. After your selection, you will be prompted to enter your existing pass phrase.\n> "
 	START_MINTING_MSG        = "Do you wish to start the minting process with \"%s\"? Note you will be prompted again for pass phrase.\n-> Type 'y' to mint.\n-> Type 'l' to list wallet file(s) - back to program start.\n-> Type any key to exit.\n> "
@@ -52,7 +52,7 @@ const (
 	NO                       = "n"
 )
 
-// TODO fix directory varables (will fix when I fix the tests)
+// TODO fix directory varables (will fix when tests are fixed)
 func init() {
 	if _, err := os.Stat(PRIVATE_KEY_FILE_DIR); os.IsNotExist(err) {
 		err := os.Mkdir(PRIVATE_KEY_FILE_DIR, 0777)
@@ -75,20 +75,9 @@ func PrivateKeyFileDirRead(private_key_file_dir string) ([]fs.FileInfo, error) {
 	return files, nil
 }
 
-// setupUserSelectFile simply initializes variables, including user input - file number
-func setupUserSelectDir(dirs []fs.FileInfo, selection_prompt string, input_file *os.File) (dir_slice []string, err error, dir_number_str string, tries int, continue_loop bool) {
-	tries = SELECT_DIR_RETRIES
-	continue_loop = true
-	dir_slice = []string{}
-	for idx, _ := range dirs {
-		dir_slice = append(dir_slice, dirs[idx].Name())
-	}
-	dir_number_str, err = getUserAnswer(selection_prompt, "", input_file)
-	if err != nil {
-		fmt.Printf("Error: %x", err)
-		dir_number_str = ""
-		return
-	}
+// OneDirOptions wraps UserSelectDir(), single dir parameters, name -> one_file string and name -> single_file bool
+func OneDirOptions(dirs []fs.FileInfo, input_file *os.File, selection_prompt, dirname string, single_file bool) (private_key_filename string, new_file bool) {
+	private_key_filename, new_file = UserSelectDir(dirs, nil, selection_prompt, dirname, true)
 	return
 }
 
@@ -118,162 +107,18 @@ func UserSelectDir(dirs []fs.FileInfo, input_file *os.File, selection_prompt, on
 	return
 }
 
-// caseMint runs if the MINT case is hit i.e. one file exists and the user types 'm' to immidiately confirm mint
-func caseMint(single_dir_arg bool, one_file_arg string, selected_dir_arg string, new_dir_arg bool) (string, bool) {
-	if single_dir_arg {
-		return one_file_arg, false
-	} else {
-		return selected_dir_arg, new_dir_arg
+// setupUserSelectFile simply initializes variables, including user input - file number
+func setupUserSelectDir(dirs []fs.FileInfo, selection_prompt string, input_file *os.File) (dir_slice []string, err error, dir_number_str string, tries int, continue_loop bool) {
+	tries = SELECT_DIR_RETRIES
+	continue_loop = true
+	dir_slice = []string{}
+	for idx, _ := range dirs {
+		dir_slice = append(dir_slice, dirs[idx].Name())
 	}
-}
-
-// defaultCase runs if the default: is hit in the UserSelectFile() switch statement,
-// defaultCase gives the user 3 tries properly select a file
-// TODO maybe this will work without changing vars names or refactoring... let's see.
-func defaultCase(file_num_str_arg, chances string, file_slice []string, tries_arg int, err error, input_file *os.File) (selected_file, file_number_str string, new_file bool, tries int, continue_loop bool) {
-	selected_file = obtainFile(file_num_str_arg, file_slice)
-	if selected_file == "" {
-		if tries_arg == 1 {
-			tries = 1
-			file_number_str = file_num_str_arg
-			continue_loop = false
-			return
-		} else {
-			tries_arg--
-			continue_loop = true
-			if tries_arg == 1 {
-				chances = ONE_TRY
-			}
-			tries = tries_arg
-			mid := fmt.Sprintf("%v %s left before the program terminates.\n", tries, chances)
-			prompt := FILE_SELECTION_RETRY_MSG + mid + FILE_SELECTION_MSG
-			file_number_str, err = getUserAnswer(prompt, "", input_file)
-			if err != nil {
-				fmt.Printf("Error: %x", err)
-			}
-		}
-	} else {
-		continue_loop = false
-		file_number_str = file_num_str_arg
-		tries = tries_arg
-		return
-	}
-	return
-}
-
-// caseChangePassPhrase runs if the CHANGE_PASS_PHRASE switch statement is hit in UserSelectFile()
-func caseChangePassPhrase(single_file bool, one_file, prompt string, input_file *os.File, file_slice []string) (selected_file string, new_file bool) {
-	// cp suffix stands for [c]hange [p]ass phrase
-	if !single_file {
-		file_number_str_cp, err := getUserAnswer(prompt, "", input_file)
-		if err != nil {
-			fmt.Printf("Error: %x", err)
-			return
-		}
-		// NR - Note, no retry logic if user puts in bad input, program will exit, but I think this is OK in this case...
-		// when a wallet file has stashes, to change a pass phrase the stashes will have to be moved to the new file with the new pass phrase
-		file_to_cp := obtainFile(file_number_str_cp, file_slice)
-		_, found := inSlice(file_slice, file_to_cp)
-		if found && file_to_cp != "" {
-			return changePassPhrase(file_to_cp, input_file), false
-		} else {
-			return
-		}
-	} else {
-		return changePassPhrase(one_file, input_file), false
-	}
-}
-
-// OneDirOptions wraps UserSelectDir(), single dir parameters, name -> one_file string and name -> single_file bool
-func OneDirOptions(dirs []fs.FileInfo, input_file *os.File, selection_prompt, dirname string, single_file bool) (private_key_filename string, new_file bool) {
-	private_key_filename, new_file = UserSelectDir(dirs, nil, selection_prompt, dirname, true)
-	return
-}
-
-// inSlice verifies that a string file name is in a slice
-func inSlice(slice []string, file_name string) (int, bool) {
-	for i, item := range slice {
-		if item == file_name {
-			return i, true
-		}
-	}
-	return -1, false
-}
-
-// obtainFile returns the file the user selects from the private key file directory
-func obtainFile(file_number_str string, file_slice []string) (selected_file string) {
-	file_number_int, _ := strconv.Atoi(file_number_str) // will be 0 if file_number_str is garbage
-	if file_number_int == 0 {
-		return
-	}
-	if file_number_int > len(file_slice) {
-		fmt.Printf("That number selection: %v, does not corrispond to a wallet.\n", file_number_int)
-		return
-	}
-	selected_file = file_slice[file_number_int-1]
-	fmt.Printf("User selected wallet: %s \n", selected_file)
-	return
-}
-
-// changePassPhrase prompts the user to put in their current pass phrase, verifies this
-// and then clears the existing file and has the user create initiate the pass phrase process with SetPassPhrase()
-func changePassPhrase(wallet_dir string, input_file *os.File) (fresh_wallet_dir string) {
-	if GetPublicKey(wallet_dir, input_file) != nil {
-		fresh_wallet_dir = clearFiles(wallet_dir) // file is removed but name stays the same
-		if fresh_wallet_dir == "" {
-			return
-		} else {
-			err, exit := SetPassPhrase(fresh_wallet_dir, input_file)
-			if err != nil {
-				fmt.Printf("Encountered a problem resetting the pass phrase on wallet %s, error: %v\n", fresh_wallet_dir, err)
-				return ""
-			}
-			if exit {
-				return ""
-			}
-			return
-		}
-	} else {
-		return
-	}
-}
-
-// clearFiles removes the files from the wallet dir
-// Note distructive! But if they change their pass phrase this creates a new key anyway, so the encrypted private key will be different
-// Important question for NR - should we be doing this? Note - if the user blows out of the program using [e]xit while changing their pass phrase the file name is gone
-func clearFiles(wallet_dir string) string {
-	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
-	directory := path.Join(private_key_file_dir, wallet_dir)
-	dir_read, _ := os.Open(directory)
-	dir_files, _ := dir_read.Readdir(0)
-	for index := range dir_files {
-		f := dir_files[index]
-		file_name := f.Name()
-		full_path := directory + file_name
-		os.Remove(full_path)
-	}
-	err := os.Remove(directory) // TODO hitting this error, not able to remove PK dir, dir not empty
+	dir_number_str, err = getUserAnswer(selection_prompt, "", input_file)
 	if err != nil {
-		fmt.Printf("Not able to remove the private key file, error: %v\n", err)
-		return ""
-	}
-	return wallet_dir
-}
-
-// CreateFirstWalletOfProgram runs if there are no files in the private key file directory
-func CreateFirstWalletOfProgram(prompt string, input_file *os.File) (wallet_dir string, new_file bool) {
-	if input_file == nil {
-		input_file = os.Stdin
-	}
-	create_wallet, err := getUserAnswer(prompt, "", input_file)
-	if err != nil {
-		fmt.Printf("Error is: %x", err)
-		return
-	}
-	if create_wallet == YES {
-		wallet_dir = CreateWallet(input_file, FILE_NAME_CREATION_MSG)
-		new_file = true
-	} else {
+		fmt.Printf("Error: %x", err)
+		dir_number_str = ""
 		return
 	}
 	return
@@ -315,6 +160,156 @@ func CreateWallet(input_file *os.File, creation_msg string) (wallet_dir string) 
 	return
 }
 
+// caseMint runs if the MINT case is hit i.e. one file exists and the user types 'm' to immidiately confirm mint
+func caseMint(single_dir_arg bool, one_file_arg string, selected_dir_arg string, new_dir_arg bool) (string, bool) {
+	if single_dir_arg {
+		return one_file_arg, false
+	} else {
+		return selected_dir_arg, new_dir_arg
+	}
+}
+
+// caseChangePassPhrase runs if the CHANGE_PASS_PHRASE switch statement is hit in UserSelectFile()
+func caseChangePassPhrase(single_file bool, one_file, prompt string, input_file *os.File, file_slice []string) (selected_file string, new_file bool) {
+	// cp suffix stands for [c]hange [p]ass phrase
+	if !single_file {
+		file_number_str_cp, err := getUserAnswer(prompt, "", input_file)
+		if err != nil {
+			fmt.Printf("Error: %x", err)
+			return
+		}
+		// NR - *Note* when a wallet file has stashes or stash references, to change a password the stashes will have to be moved to the new file with the new password
+		file_to_cp := obtainFile(file_number_str_cp, file_slice)
+		_, found := inSlice(file_slice, file_to_cp)
+		if found && file_to_cp != "" {
+			return changePassPhrase(file_to_cp, input_file), false
+		} else {
+			return
+		}
+	} else {
+		return changePassPhrase(one_file, input_file), false
+	}
+}
+
+// obtainFile returns the file the user selects from the private key file directory
+func obtainFile(file_number_str string, file_slice []string) (selected_file string) {
+	file_number_int, _ := strconv.Atoi(file_number_str) // will be 0 if file_number_str is garbage
+	if file_number_int == 0 {
+		return
+	}
+	if file_number_int > len(file_slice) {
+		fmt.Printf("That number selection: %v, does not corrispond to a wallet.\n", file_number_int)
+		return
+	}
+	selected_file = file_slice[file_number_int-1]
+	fmt.Printf("User selected wallet: %s \n", selected_file)
+	return
+}
+
+// inSlice verifies that a string file name is in a slice
+func inSlice(slice []string, file_name string) (int, bool) {
+	for i, item := range slice {
+		if item == file_name {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
+// changePassPhrase prompts the user to put in their current pass phrase, verifies this
+// and then clears the existing file and has the user create initiate the pass phrase process with SetPassPhrase()
+func changePassPhrase(wallet_dir string, input_file *os.File) (fresh_wallet_dir string) {
+	if GetPublicKey(wallet_dir, input_file) != nil {
+		fresh_wallet_dir = clearFiles(wallet_dir) // file is removed but name stays the same
+		if fresh_wallet_dir == "" {
+			return
+		} else {
+			err, exit := SetPassword(fresh_wallet_dir, input_file)
+			if err != nil {
+				fmt.Printf("Encountered a problem resetting the pass phrase on wallet %s, error: %v\n", fresh_wallet_dir, err)
+				return ""
+			}
+			if exit {
+				return ""
+			}
+			return
+		}
+	} else {
+		return
+	}
+}
+
+// clearFiles removes the files from the wallet dir
+// Note distructive! But if the user changes their password this creates a new key anyway, so the encrypted private key will be different
+// Note - if the user blows out of the program using [e]xit while changing their pass phrase the file name is gone
+// Note - again when a wallet file has stashes or stash references, to change a password the stashes will have to be transferred to the new file with the new password
+func clearFiles(wallet_dir string) string {
+	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
+	directory := path.Join(private_key_file_dir, wallet_dir)
+	dir_read, _ := os.Open(directory)
+	dir_files, _ := dir_read.Readdir(0)
+	for index := range dir_files {
+		f := dir_files[index]
+		file_name := f.Name()
+		full_path := path.Join(directory, file_name)
+		os.Remove(full_path)
+		fmt.Printf("removing file: %s\n", full_path)
+	}
+	return wallet_dir
+}
+
+// defaultCase runs if the default: is hit in the UserSelectFile() switch statement,
+// defaultCase gives the user 3 tries properly select a file
+func defaultCase(file_num_str_arg, chances string, file_slice []string, tries_arg int, err error, input_file *os.File) (selected_file, file_number_str string, new_file bool, tries int, continue_loop bool) {
+	selected_file = obtainFile(file_num_str_arg, file_slice)
+	if selected_file == "" {
+		if tries_arg == 1 {
+			tries = 1
+			file_number_str = file_num_str_arg
+			continue_loop = false
+			return
+		} else {
+			tries_arg--
+			continue_loop = true
+			if tries_arg == 1 {
+				chances = ONE_TRY
+			}
+			tries = tries_arg
+			mid := fmt.Sprintf("%v %s left before the program terminates.\n", tries, chances)
+			prompt := FILE_SELECTION_RETRY_MSG + mid + FILE_SELECTION_MSG
+			file_number_str, err = getUserAnswer(prompt, "", input_file)
+			if err != nil {
+				fmt.Printf("Error: %x", err)
+			}
+		}
+	} else {
+		continue_loop = false
+		file_number_str = file_num_str_arg
+		tries = tries_arg
+		return
+	}
+	return
+}
+
+// CreateFirstWalletOfProgram runs if there are no files in the private key file directory
+func CreateFirstWalletOfProgram(prompt string, input_file *os.File) (wallet_dir string, new_file bool) {
+	if input_file == nil {
+		input_file = os.Stdin
+	}
+	create_wallet, err := getUserAnswer(prompt, "", input_file)
+	if err != nil {
+		fmt.Printf("Error is: %x", err)
+		return
+	}
+	if create_wallet == YES {
+		wallet_dir = CreateWallet(input_file, FILE_NAME_CREATION_MSG)
+		new_file = true
+	} else {
+		return
+	}
+	return
+}
+
 // getUserAnswer gives the user a prompt and takes user input
 func getUserAnswer(prompt, priv_key_filename string, input_file *os.File) (string, error) {
 	var answer string
@@ -329,28 +324,6 @@ func getUserAnswer(prompt, priv_key_filename string, input_file *os.File) (strin
 		return "", err
 	}
 	return answer, nil
-}
-
-// getWalletName reads from stdin and flags if there is a space in the name
-// Note, this function is similar to getPassPhrase() in encrypt.go, maybe refactor
-func getWalletName(prompt string, input_file *os.File) (private_key_filename string, err error) {
-	fmt.Printf(prompt)
-	if os.Getenv("PROD") == "true" {
-		reader := bufio.NewReader(os.Stdin)
-		private_key_filename, _ = reader.ReadString('\n')
-		private_key_filename = strings.TrimSuffix(private_key_filename, "\n")
-		private_key_filename_no_spaces := strings.ReplaceAll(private_key_filename, " ", "")
-		if private_key_filename_no_spaces != private_key_filename {
-			private_key_filename = SPACE_ERROR
-		}
-	} else {
-		_, err = fmt.Fscanf(input_file, "%s", &private_key_filename) // needs to be tested
-	}
-	if err != nil {
-		fmt.Printf("Input error: %v", err)
-		return
-	}
-	return
 }
 
 // walletValidationLoop takes user input and makes sure it conforms to naming conventions in validateAlphaNum()
@@ -371,6 +344,28 @@ func walletValidationLoop(prompt string, input_file *os.File) (wallet_dir string
 		} else {
 			try_again = false
 		}
+	}
+	return
+}
+
+// getWalletName reads from stdin and flags if there is a space in the name
+// Note, this function is similar to getPassword() in encrypt.go, maybe refactor
+func getWalletName(prompt string, input_file *os.File) (private_key_filename string, err error) {
+	fmt.Printf(prompt)
+	if os.Getenv("PROD") == "true" {
+		reader := bufio.NewReader(os.Stdin)
+		private_key_filename, _ = reader.ReadString('\n')
+		private_key_filename = strings.TrimSuffix(private_key_filename, "\n")
+		private_key_filename_no_spaces := strings.ReplaceAll(private_key_filename, " ", "")
+		if private_key_filename_no_spaces != private_key_filename {
+			private_key_filename = SPACE_ERROR
+		}
+	} else {
+		_, err = fmt.Fscanf(input_file, "%s", &private_key_filename) // needs to be tested
+	}
+	if err != nil {
+		fmt.Printf("Input error: %v", err)
+		return
 	}
 	return
 }
