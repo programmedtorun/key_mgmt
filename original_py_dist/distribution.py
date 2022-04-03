@@ -1,3 +1,11 @@
+"""
+
+  This distribution algorithm was written by Nate Rapport
+  and is a a prototype of the minting algorithm to be 
+  implemented for Kaon 
+
+"""
+
 import enum
 from random import seed, choice, shuffle
 from string import ascii_letters, digits
@@ -260,7 +268,7 @@ if __name__=='__main__':
             print_max_difficulty(n=j, k=i)
 
     """
-    
+    # prototype testing
     # m, n, k, h = 2, 2, 5, 64
     # print_max_difficulty(n=2, k=15)
     # mine(m, n, k, h, min_to_mine=1)

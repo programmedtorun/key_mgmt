@@ -1,12 +1,8 @@
 /*
-TODO
-[ ] Maybe don't need the InitCipherAndPassword() function
-[ ] Potentially implement passw package
-ISSUES:
+  encrypt.go sets the user's password by calling InitCipherAndPassword(), the user's password
+  is salted and is hashed, the key is then used to encrypt a wallet file's private key
 */
 
-// encrypt.go sets the user's pass phrase by calling InitCipherAndPassword(), the user's pass phrase
-// also uses salt and is hashed to a key which is used to encrypt a wallet file's private key
 package wallet
 
 import (

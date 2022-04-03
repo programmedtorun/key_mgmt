@@ -1,7 +1,8 @@
 /*
    Adapts a password reader from https://github.com/petems/passwordgetter
    Allows mocking of stdin for easier testing.
-   This package is not implemented yet, code and tests would need to be heavily refactored
+   This package is not implemented, code and tests would need to be heavily refactored.
+   It's under consideration for a different design paradigm
 */
 package passw
 

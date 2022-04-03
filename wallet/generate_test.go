@@ -1,19 +1,6 @@
 /*
-TODO
-[x] research how to auto test function that requires user input I think this is not
-    practical to test functions with much user input reference:
-    https://stackoverflow.com/questions/17456901/how-to-write-tests-against-user-input-in-go
-[x] Test functions that can be tested
-[x] Rewrite TestEncryptAndDecryptAES() to account for login / salt
-[x] Add setup and teardown functions with env vars
-[ ] Maybe remove printed output in test(?)
-[ ] Fix test env dir stuff in setupTests() there is a private_key dir for prod there should be one for test in wallet/ that gets set up and removed in teardown()
-ISSUES
-[x] There is a strange bug that fails TestMintConfirmation,
-    but only sometimes, with error: crypto/aes: invalid key size.
-	Could be a timing issue with input(?) the test_auto_generation dir doesn't
-	get deleted if the test fails.
-*/
+
+ */
 
 package wallet
 
@@ -26,7 +13,6 @@ import (
 	"testing"
 
 	"github.com/programmedtorun/key_mgmt/mint"
-	// "github.com/Eratosthenes/distribution/utils"
 )
 
 const (
