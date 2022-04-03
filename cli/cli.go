@@ -23,8 +23,8 @@ var new_file bool
 var main_loop bool = true
 
 const (
-	WELCOME_PARAGRAPH = "This program will allow you to create a wallet, which is simply a file to be used for minting KAON. The program looks in the private_key directory for wallet files on your machine. The program will allow you to select a wallet file and begin the minting process, you may also create new wallet files to use for minting."
-	WALLET_FILES_MSG  = "\nFound wallet directories in the private key file directory, listed here:\n\n"
+	WELCOME_PARAGRAPH = "This program will allow you to create a wallet, which is simply a directory containing a private key file to be used for minting KAON. The program looks in the private_key directory for wallet directories on your machine. The program will allow you to select a wallet and begin the minting process, you may also create new wallets to use for minting."
+	WALLET_FILES_MSG  = "\nFound wallet directories in the key_mgmt/private_key file directory, listed here:\n\n"
 	ONE_DIR_MSG       = "\nFound 1 wallet directory:"
 	INIT_MSG          = "\n\nNo wallet directories detected. Would you like to create one? Select 'y' or 'n'\n> "
 )

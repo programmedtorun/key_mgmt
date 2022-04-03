@@ -23,20 +23,20 @@ import (
 )
 
 const (
-	FILE_NAME_VALIDATION_MSG = "\nPlease choose a better wallet file name.\n\nCreate a file name that is:\n-> Alphanumeric\n-> Between 3 - 32 characters\n-> Characters '.', '-' and '_' are OK\n-> Type 'e' and hit return to exit this process\n\nEnter your new wallet file name.\n> "
-	FILE_SELECTION_RETRY_MSG = "\nSelection not recognized. Please carefully select a number from the list corrisponding to a wallet file. "
-	PASS_PHRASE_EXPLANATION  = "\nNow you must create a pass phrase for your wallet file, this will allow access to an RSA public and private key pair and subsequently encrypt your private key, write the encrypted private key to the wallet file you just created, and save this file to the private key file directory.\nGenerating your RSA public and private key pair using RSA-4096 bit encryption, this may take just a moment....."
-	FILE_NAME_CREATION_MSG   = "\nPlease create a simple name for your new KAON wallet file, the file extention '.dat' will be appended to the end of your file name. File name chosen must be unique to the file list in the private_key directory. Type 'e' to exit.\nEnter your new wallet file name.\n> "
-	FILE_NAME_SPACE_ERROR    = "\nYou entered a space in you file name. Please choose a new file name.\n> "
+	FILE_NAME_VALIDATION_MSG = "\nPlease choose a better wallet name.\n\nCreate a name that is:\n-> Alphanumeric\n-> Between 3 - 32 characters\n-> Characters '.', '-' and '_' are OK\n-> Type 'e' and hit return to exit this process\n\nEnter your new wallet name.\n> "
+	FILE_SELECTION_RETRY_MSG = "\nSelection not recognized. Please carefully select a number from the list corrisponding to a wallet. "
+	FILE_NAME_CREATION_MSG   = "\nPlease create a simple name for your new KAON wallet. Wallet name chosen must be unique to the wallet list in the key_mgmt/private_key directory. Type 'e' to exit.\nEnter your new wallet name.\n> "
+	FILE_NAME_SPACE_ERROR    = "\nYou entered a space in you wallet name. Please choose a new wallet name.\n> "
 	CREATE_NEW_WALLET_MSG    = "\nDo you wish to create a new wallet? Type 'y' to create, or any key to exit.\n> "
+	PASSWORD_EXPLANATION     = "\nNow you must create a password for your wallet, this will allow access to an RSA public and private key pair and subsequently encrypt your private key, write the encrypted private key to a 'cipher.dat' file.\nNow generating your RSA public and private key pair using RSA-4096 bit encryption, this may take just a moment..."
 	PRIVATE_KEY_FILE_DIR     = "./private_key"
-	FILE_NAME_EXISTS_MSG     = "\nThat file name already exists within the private key directory, file name must be unique.\nPlease enter a simple name for your file, the file extention '.txt' will be appended to the end of your file name. Type 'e' to exit.\n> "
+	FILE_NAME_EXISTS_MSG     = "\nThat name already exists within the key_mgmt/private_key directory, name must be unique.\nPlease enter a simple name. Type 'e' to exit.\n> "
+	CONFIRM_MINT_WALLET      = "OK! let's get started on minting KAON!! Meant to mint ;). Is \"%s\" the wallet you wish to use to mint?\n\nOptions:\n-> Type 'y' for yes.\n-> Type 'n' to create a new wallet or exit.\n-> Type 'l' to list wallet(s) - back to program start.\n-> Type 'e' or any key to exit.\n> "
 	SELECT_DIR_RETRIES       = 4
-	FILE_SELECTION_MSG       = "Options:\n-> Type the NUMBER of the wallet you wish to use to mint KAON.\n-> Type 'c' to create a new wallet file.\n-> Type 'cp' to change your password.\n-> Type 'e' to exit.\n> "
-	CHANGE_PASS_PHRASE       = "cp"
-	CHANGE_PASS_PROMPT       = "Select the NUMBER of the wallet file for which you'd like to change the pass phrase. After your selection, you will be prompted to enter your existing pass phrase.\n> "
-	START_MINTING_MSG        = "Do you wish to start the minting process with \"%s\"? Note you will be prompted again for pass phrase.\n-> Type 'y' to mint.\n-> Type 'l' to list wallet file(s) - back to program start.\n-> Type any key to exit.\n> "
-	CONFIRM_MINT_WALLET      = "OK! let's get started on minting KAON!! Meant to mint ;). Is \"%s\" the wallet you wish to use to mint?\n\nOptions:\n-> Type 'y' for yes.\n-> Type 'n' to create a new file or exit.\n-> Type 'l' to list wallet file(s) - back to program start.\n-> Type 'e' or any key to exit.\n> "
+	FILE_SELECTION_MSG       = "Options:\n-> Type the NUMBER of the wallet you wish to use to mint KAON.\n-> Type 'c' to create a NEW wallet.\n-> Type 'cp' to change your password.\n-> Type 'e' to exit.\n> "
+	CHANGE_PASS_PROMPT       = "Select the NUMBER of the wallet for which you'd like to change the password. After your selection, you will be prompted to enter your existing password.\n> "
+	START_MINTING_MSG        = "Do you wish to start the minting process with \"%s\"? Note you will be prompted again for the wallet password.\n-> Type 'y' to mint.\n-> Type 'l' to list wallet(s) - back to program start.\n-> Type any key to exit.\n> "
+	CHANGE_PASSWORD          = "cp"
 	USER_INPUT_ERR           = "An error occured obtaining user input please try again.\n"
 	ONE_DIR_MSG              = "Options:\n-> Type 'm'  to continue to confirm mint with this wallet.\n-> Type 'cp' to change your password.\n-> Type 'c'  to create a NEW wallet.\n-> Type 'e'  to exit.\n> "
 	SALT_LENGTH              = 8 // Can be changed. Suggest SALT_LENGTH be 32 or under
@@ -98,7 +98,7 @@ func UserSelectDir(dirs []fs.FileInfo, input_file *os.File, selection_prompt, on
 			return CreateWallet(input_file, FILE_NAME_CREATION_MSG), new_file // user wants to create a new file vs. select from file list
 		case EXIT:
 			return
-		case CHANGE_PASS_PHRASE:
+		case CHANGE_PASSWORD:
 			return caseChangePassPhrase(single_dir, one_dir, CHANGE_PASS_PROMPT, input_file, dir_slice)
 		default:
 			selected_dir, dir_number_str, new_file, tries, continue_loop = defaultCase(dir_number_str, MANY_TRIES, dir_slice, tries, err, input_file)
@@ -169,7 +169,7 @@ func caseMint(single_dir_arg bool, one_file_arg string, selected_dir_arg string,
 	}
 }
 
-// caseChangePassPhrase runs if the CHANGE_PASS_PHRASE switch statement is hit in UserSelectFile()
+// caseChangePassPhrase runs if the CHANGE_PASSWORD switch statement is hit in UserSelectFile()
 func caseChangePassPhrase(single_file bool, one_file, prompt string, input_file *os.File, file_slice []string) (selected_file string, new_file bool) {
 	// cp suffix stands for [c]hange [p]ass phrase
 	if !single_file {
@@ -456,7 +456,7 @@ func Divider() {
 	}
 }
 
-func WalletCreationMsg(private_key_filename string) {
-	fmt.Printf("\nSUCCESS!! Your new wallet file name is: %s\n", private_key_filename)
-	fmt.Println(PASS_PHRASE_EXPLANATION)
+func WalletCreationMsg(wallet_dir string) {
+	fmt.Printf("\nSUCCESS!! Your new wallet name is: %s\n", wallet_dir)
+	fmt.Println(PASSWORD_EXPLANATION)
 }
