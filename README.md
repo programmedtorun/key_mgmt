@@ -20,7 +20,8 @@ go mod tidy
 
 
 Build and run using the `go build main.go` 
-and the `go run main.go` commands. 
+and the `go run main.go` commands. Don't bother with `go build` as the compiler will complain
+about the test files. 
 
 
 ----
