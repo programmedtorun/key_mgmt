@@ -1,7 +1,6 @@
 /*
-TODO
-[x] Write tests
-*/
+
+ */
 package wallet
 
 import (

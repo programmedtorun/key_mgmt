@@ -1,32 +1,9 @@
 /*
-TODO:
-[x] Think about implementing different RandomString()
-[x] Pass phrase validation
-[x] Pass phrase confirmation
-[x] Pass phrase tests
-[x] Potentially reconsider the CLI flow
-[x] divide() function to print based on terminal width
-[ ] Rename some env vars for private key file dir, make shorter
-[ ] Fix test directory cleanup
-[x] Add field on Candidate for timestamp
-[x] Change ExportRsaPrivateKeyAsPemStr() to ExportRsaPrivateKeyAsPemBytes() and make associated changes
-[x] Fix encrypt / decrypt bug (was []byte(",") seperator causing problems)
-[x] Remove concatCopyPreAllocate() and use append() for 2 slices
-[x] Throw clear error if encryptAES() isn't passed 32 byte key
-[ ] (read Nate's error articles) Figure out how to handle errors in encrypt / decrypt, seems some blog articles suggest panic
-[ ] Refactor based on proper error handling, propagate errors properly
-[ ] Nate note -> research using a defer statement, recover in main if things go wrong
-[ ] (later) Write endpoints to the Kaon auditor network for sending txns and checking balances [full wallet functionality may be written in a separate repo]
-[x] users should be able to change password at some point.
-[x] Add ability for users to exit in the middle of setting a pass phrase, so they can blow out of the program without creating a file
-[x] TODO give users another try to type a number that corrisponds to a file
-ISSUES:
-[x] Trying to build a go program and package for use in a .deb debian package
+  generate.go generates a wallet for the user, initiates encryption and the
+  minting process either with the generated wallet, or via prompting the user
+  to select an existing wallet
 */
 
-// generate.go generates a wallet for the user, initiates encryption and the
-// minting process either with the generated wallet, or via prompting the user
-// to select an existing wallet
 package wallet
 
 import (
@@ -41,7 +18,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Eratosthenes/distribution/candidate"
+	"github.com/programmedtorun/key_mgmt/candidate"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

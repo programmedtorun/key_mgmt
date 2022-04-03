@@ -1,6 +1,9 @@
-// cli.go and Run() runs the main program loop which finds, analyzes and
-// launches code that preps files for minting, launches confirmation
-// functions and initiates the minting process
+/*
+This file runs the main program loop which finds wallets, analyzes and
+launches files for minting, creates wallets, presents confirmation
+messages and initiates the minting process
+*/
+
 package cli
 
 import (
@@ -10,8 +13,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/Eratosthenes/distribution/mint"
-	"github.com/Eratosthenes/distribution/wallet"
+	"github.com/programmedtorun/key_mgmt/mint"
+	"github.com/programmedtorun/key_mgmt/wallet"
 )
 
 var wallet_dir string
@@ -92,8 +95,8 @@ func printFoundDirs(dirs []fs.FileInfo) {
 	wallet.Divider()
 }
 
-// TODO: make this print line by line so that it more slowly pops up for the reader.
 func printWelcome() {
+	// TODO: Change to printing line by line, or character by character.
 	content, err := ioutil.ReadFile("welcome.txt")
 	if err != nil {
 		log.Fatal(err)

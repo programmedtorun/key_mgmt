@@ -1,5 +1,7 @@
-// retrieve.go obtains the user's password, decrypts the private key and
-// verifies that the user has the credentials to mint
+/*
+  retrieve.go obtains the user's password, decrypts the private key and
+  verifies that the user has the credentials to mint
+*/
 package wallet
 
 import (

@@ -1,3 +1,11 @@
+/*
+Candidate is a structure derived from a public address that,
+when given as input to the minting algorithm produces stashes
+that are checked against existing stashes in the haystack,
+if there are no collisions, the stash is created, added and
+associated with the originator's address.
+*/
+
 package candidate
 
 import (
@@ -14,15 +22,17 @@ import (
 )
 
 /*
-These constants are subject to change once work begins on the minting algorithm
-They are taken from the python distribution prototype
+Kaon minting algorithm variables are subject to change
+once work begins on this algorithm. Variables are taken
+from the python distribution prototype
+
 'H' is hash length
 'M' is the length of a section of has digits
 'N' is the number of m-digits matches to check
-'K' is the number of iterations a candidate is
-checked against the hash of any existing stash
-concatenated with the candidate
+'K' is the number of iterations a candidate is checked
+against the hash of any existing stash concatenated with the candidate
 */
+
 const (
 	H int = 32
 	M int = 3 // Might not be needed
@@ -43,9 +53,8 @@ func New(public_address *rsa.PublicKey, rand_data string) *Candidate {
 }
 
 // When run, this function assumes you have a valid wallet address
-// until the getPriK() "get private key" function works I'll use a dummy
-// publickey address (I'll simply generate an rsa pair on the fly in InitCandidate())
-// ..Encode fields random data & *rsa.PublicKey and hash with sha3
+// via Candidate.PubAddress. For testing, an rsa pair can be generated
+// on the fly in InitCandidate()
 func GenerateHashCandidate(cf *Candidate) (string, error) {
 	hash_length := H
 	var buf bytes.Buffer
@@ -57,18 +66,13 @@ func GenerateHashCandidate(cf *Candidate) (string, error) {
 		log.Fatal(err)
 	}
 	hash := make([]byte, hash_length)
-	// ShakeSum256 writes into hash
-	sha3.ShakeSum256(hash, buf.Bytes())
+	sha3.ShakeSum256(hash, buf.Bytes()) // writes into hash
 	sha3.ShakeSum256(hash, buf.Bytes())
 	candidate := string(hash[:])
-	// TODO creating a byte buffer - skip last step and return bytes.
-	// note, does not seem to be human readable characters
-	// (i.e. nb:�9���y���u�j��U3�CD�Z���w2+-E����), will do research if this is ok
 	return candidate[:hash_length], nil
 
 }
 
-// TODO: write functions and write a test function along with it.
 func GenRandBytes(n int) ([]byte, error) {
 	b := make([]byte, n)
 	_, err := rand.Read(b)
@@ -77,15 +81,13 @@ func GenRandBytes(n int) ([]byte, error) {
 	}
 	return b, nil
 }
+
 func GenRandStr(s int) (string, error) {
 	b, err := GenRandBytes(s)
 	return base64.URLEncoding.EncodeToString(b), err
 }
 
-// placeholder code. Once we have the Candidate struct in the boltdb
-// we can create candidates from this db (we will have to have the user
-// that is generating the candidates supply their PublicKey to locate
-// and cache the Candidate struct in the db)
+// Placeholder/tester function. Users generating candidates will supply their PublicKey
 func InitCandidate(hL int) (*Candidate, error) {
 	rsaPriKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -103,4 +105,4 @@ func InitCandidate(hL int) (*Candidate, error) {
 	return &cf, nil
 }
 
-// TODO: implement haystack / UTXO db, likely: https://github.com/boltdb/bolt
+// TODO: implement haystack db, likely: https://github.com/boltdb/bolt
