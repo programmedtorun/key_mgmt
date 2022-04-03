@@ -1,0 +1,641 @@
+commit 069e8640b7293212c48906bb3c7538e48a8b483c
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Mar 17 17:50:33 2022 -0400
+
+    adds retrieve functionality
+
+commit e4cf49987bf4a5fa2d4fc416c21830f0a1ecb058
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Mar 17 08:15:45 2022 -0400
+
+    creates a wallet dir vs. file, breaks out salt cipher and hashedpw. NOTE retrieve is not done yet
+
+commit 9d97adbdfdcd2a9d3a6e019931d6ecdac55f3019
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 11 08:01:02 2022 -0500
+
+    Changes language to account for RSA-4096 generation which causes a pause in program for user
+
+commit 38611d46f7248b46316bcb6e9462bbe198eb7c63
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 11 07:39:57 2022 -0500
+
+    light refactoring
+
+commit 84f72137bc290f5112a45e10e04140c44ef2ae5a
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Mar 7 08:25:25 2022 -0500
+
+    Refactors & adds input prompts. Adds prompt consts in retrieve.go, aligns user choices, light rewording for clarity, refactor some strings to consts in encrypt.go
+
+commit 5c841b8127902397680e931dc2fd5e6657ebf914
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Mar 7 01:41:27 2022 -0500
+
+    Adds a few comments...
+
+commit d054c21793a4a65741d96c2fbb34afe70ba38078
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Mar 7 01:16:37 2022 -0500
+
+    Segnificant refactor of switch statement + adding flow control if the user miss types input for the list
+
+commit bbd7d7430b45d0d5025d110fd3bebb5e4aef818f
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Mar 6 17:12:24 2022 -0500
+
+    Refactors CLI flow to print files outside of running code in analyzeFiles(), Adds SPACE_ERROR message correction for file naming, changes flow to allow the user to change pw, exit, create when there is just one file - function OneFileOptions() in generate.go
+
+commit 2593e8a576ca15c69eb2b0dc485ef28bb55dfe1d
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 22:11:03 2022 -0500
+
+    Edits / Adds function comments
+
+commit 6162f8d1690758f82d7b4cfd9cf9e79682f5a303
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 21:39:03 2022 -0500
+
+    Adds exit logic to blow out of program in password setting with 'e', adds logic to not add a file name that is already in the private key file dir.
+
+commit f20bff7d108dbd6db421af67376d2b5167b3fe9b
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 16:32:44 2022 -0500
+
+    Edit / refine README.md
+
+commit 064814f238aa433ed685d807f471fd81c87cd319
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 16:31:45 2022 -0500
+
+    Edit / refine README.md
+
+commit 38c0f57ecd834b920990b447534bfa46d5848729
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 16:24:42 2022 -0500
+
+    Edit / refine README.md
+
+commit fc70ab53536909f321f3632b26a4fd6a7f8fb197
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 16:06:43 2022 -0500
+
+    Adds documentation in README.md
+
+commit f41d23a31fe2ce61a74773324f441859bb2be9f5
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 14:02:42 2022 -0500
+
+    Adds feature to change pass phrase, refactors UserSelectFile() flow to switch statement
+
+commit 49b9c85913925fe75a683c650d8a524b12752beb
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 10:50:44 2022 -0500
+
+    Adding pass phrase attempts loop
+
+commit 1fabeb63c840bd37fa47a2fa47c361c7b1800370
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 09:53:43 2022 -0500
+
+    Fixes bad import cycle
+
+commit cc893d4b1e13d5b6fd11b67fb573b9f1b13707ef
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Mar 4 09:46:30 2022 -0500
+
+    Refactors utils package our of existance :)
+
+commit 600dcbb61a679bcbd9751b876db2aa5f6cd6ee0f
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Mar 3 22:08:16 2022 -0500
+
+    Adding a dmg file that runs a program which inits a CLI
+
+commit c22003e7a2d00211425fedc78f8fa72e50b0b856
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Feb 28 17:46:59 2022 -0500
+
+    WIP - save point. Stashing changes essentially
+
+commit 2179e982d97a6f7f499222db0f2b742a472969f2
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 27 14:39:21 2022 -0500
+
+    const refactor, analyzeFiles() in cli refactor for readability
+
+commit 8589e0f7ae9708e3c6a9efa519e318d699b7c3d9
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 27 13:39:54 2022 -0500
+
+    Builds better CLI flow control - ability to list files even after creating a file, and just prior to asking to mint... the user can start over and list files again. Adds Priv Key dir creation if not there.
+
+commit a3d5864cb3f8aac31d4cbc4052a56b1dbc991013
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 27 13:02:16 2022 -0500
+
+    Removes panics from decrypt (verify with Nate that we shouldn't use these) moves PASS_PHRASE_EXPLANATION to utils and adds FileCreationMsg()
+
+commit b5a47892b9819b98b420b8eadf5c428481957cfc
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 27 12:21:43 2022 -0500
+
+    fixes the CLI flow to make it more intuitive, adds better file creation logic, adds better file listing logic, prints welcome screen for minter, refactors file name validation loop, removes RandomString() function from utils
+
+commit 6ff120ff8c99619381424135ebc29981c881fd7d
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Feb 25 21:37:33 2022 -0500
+
+    Adds ability to name file upon user selection to create a new file (previously this naming was auto incremented), changes generate random string to generate random bytes
+
+commit e8ddd68dab58f0943fc689cd3bc3155e08280f8a
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Feb 25 20:39:42 2022 -0500
+
+    Adds program initiation if there is no wallet present in private_key dir
+
+commit 5a2cd17e59cdca2e46c980bed83afe83d7e743ac
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Feb 25 10:43:29 2022 -0500
+
+    updating TODO lists
+
+commit a3716d3a06f48216874c331f2f07d5ee0a307b39
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Feb 25 10:29:00 2022 -0500
+
+    adds some comments on new functions, adds TODO - change tests for new user input loops, refactor a bit - getting rid of excess var statements, adds 2nd RandomString2() function, started on a 3rd but didn't see much point, note we could have a function that randomly calls different types of random string generation functions
+
+commit 06d074ee99cd91bb85c683c4612141676cccfc94
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Feb 25 01:19:27 2022 -0500
+
+    Adds timestamp to Candidate. Adds password validation and confirmation (user must type pw twice before it takes.
+
+commit ce392f2ed54dd0b7d6fad65b773c81b7f6f78fbe
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 24 10:59:20 2022 -0500
+
+    fixes divider() function to print only terminal width divider of '*' fixes prompt formatting
+
+commit 071b17ab87828a314bfacee4ec6f74d738e973d3
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 24 09:18:51 2022 -0500
+
+    This commit changes encryption / decryption to using []byte vs. string as per NR's comments on ExportRsaPrivateKeyAsPemStr() 'why return a string here? You're just converting it back to bytes later. Just return bytes.'
+
+commit cba4dc93987090851560b5d8558794f8186c8a6e
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 24 08:57:52 2022 -0500
+
+    Cleans up main.go (had a bunch of test code in there)
+
+commit 1631e79108be1f38ec537360b72d7748d7330b87
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 24 08:46:20 2022 -0500
+
+    Adds SALT_LENGTH const so that we can change this easily, minor adjustments to user input prompts to include '>'
+
+commit eea9b58a6d502e711010ac62470490438ca0df65
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Wed Feb 23 09:48:33 2022 -0500
+
+    Fixes stupid byte slice access bug, all tests passing now. TODO need to fix the test/prod directory stuff
+
+commit 33b23765325441135e5850211a8b3d7730a1f9b5
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sat Feb 19 09:40:16 2022 -0500
+
+    adds password package for better testing, has not been implemented yet, adding to discuss implementation
+
+commit 6f5109b5bb6a3f63da86032174ba44b24e41adf1
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Feb 18 11:19:25 2022 -0500
+
+    adds to tests retrieve_test.go, still getting Invalid key Pass phrase (key) size, should be 32 crypto/aes: invalid key size <number less than 32>, unsure why this happens
+
+commit 3684d5672931c8c8f02a5bc7fa4f0c7d21176057
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 17 20:12:21 2022 -0500
+
+    adds more tests in encrypt_test.go, adds an encrypt / decrypt test. Adds better test reporting
+
+commit a783f868ccceaea09627da7da5119003f7de8e36
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 17 09:07:38 2022 -0500
+
+    Adds better testing (printing) output, with collor and count. For test debugging... every so often I get an 'invalid AES key size' really not sure why this is happening, I'll run the tests and they all pass, say 5 times in row, and then get a failure
+
+commit 2c0b607d5e2e59cb779d2ea3e0692a4e779a1fed
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 17 00:43:35 2022 -0500
+
+    Added color to test output, to indicate pass / fail. Still have an unknown bug that causes test failures.
+
+commit c7e72b93f4d2206c5ab91cf2a2eeb8d703038f72
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Wed Feb 16 23:41:48 2022 -0500
+
+    adds a few tests to encrypt_test.go
+
+commit 9a3ac3e28936575805c0a56a2341fc8c08948981
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Wed Feb 16 18:55:06 2022 -0500
+
+    fixes run time bug, adds comments, cleans things up, tests should pass, but there is a strange issue, see ISSUES in generate_test.go
+
+commit 56b40125302d9070a00a3424fd8eed1622f30d39
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 15 18:40:02 2022 -0500
+
+    Adjusts tests to account for implementation of pbkdf2, TODO need to rewrite Encrypt/Decrypt test
+
+commit 29e05767dbdeb2a2ae368f8bf63ac9aa3ce3bf15
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 15 17:20:48 2022 -0500
+
+    implements pbkdf2 hashing of userpass phrase + random salt. generate wallet via pass phrase + salt pbkdf2 and retrieve contents. Note tests are not updated to reflect pbkdf2 yet
+
+commit fd5e97dd78648953602210c49e7781c903a2b688
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 15 00:59:47 2022 -0500
+
+    fixes tests to use env and TestMain(), working through encrypting and saving the passphrase with salt
+
+commit 5631e65085073fb0ad2305edd182a110abd128e1
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 13 11:06:13 2022 -0500
+
+    adding prefix to test files TODO remove all autogenerated test files (with prefix test_auto etc)
+
+commit 42b1af0ef1c85820015b627e6130008ab4d4ab32
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 13 10:14:37 2022 -0500
+
+    changes directory access to via os.Getenv() vs. const string variables that need to be changed in test/prod. things seem to be working as expected, note, can't really run a single test since the setup is performed by the os automatically in TestMain()
+
+commit 813b12625a96b00fe7a40322d0f3897816bfd977
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sat Feb 12 09:46:15 2022 -0500
+
+    work in progress... Started fixing dir differences in envs - prod vs test, becomming too spaghetti like if input_fill == nil {} all over the place and still getting dir errors. I'm switching to env vars, but haven't implemented yet, need to change in code but have the env vars init() in TestMain() and init(). Interesting note... documentation for TestMain() is incorrect. m.Run() takes args.
+
+commit 8971f1f1b17233318a277d9a5a1a0999d535999b
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 8 22:58:03 2022 -0500
+
+    adds source code for PSF into encrypt.go. In progress: researching on hashing password
+
+commit b8d838eaad7b26c56d0cf6c2c7fa22c57e150fcb
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 8 15:10:53 2022 -0500
+
+    accidentally uncommented a comment. fixed.
+
+commit 549fcdea7808e0a7d872809c5c8e96c27fc7d13c
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 8 15:09:47 2022 -0500
+
+    added decrypt in TestEncryptAES() to make it TestEncryptAndDecryptAES(), all tests pass for generate_test
+
+commit 92bdecf163bdb817b8acb1a668a5e3956e4e97b0
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 8 13:54:15 2022 -0500
+
+    adds user input tests - TestSetupMint() TestMintConfirmation() TestPrintFileList() and associated user_input *os.File objs propagated through functions testing input
+
+commit 036106ca3d004c5ccf354f6baf8a05ea03f2f7d1
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Feb 7 22:53:59 2022 -0500
+
+    adds a few more tests for user input TestUserConfirmMintNo() TestUserConfirmMintYes(), hides user password input, note had to change function sigs for user input
+
+commit e1295866a43ce371c0b21e36adc656fa2f304d29
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Feb 7 19:36:53 2022 -0500
+
+    Adds user input tests TestUserSelectFile(), writeToUserInputFile(), TestPrivateKeyFileDirRead(), needed to add input_file arg (will be nil when calling in prod) for testing in the UserSelectFile() function
+
+commit ae2d939e84767db52ec8aa30f6633610c3958a11
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Feb 7 16:44:48 2022 -0500
+
+    better code organization, smaller functions, discrete return values. This will greatly help in test writing
+
+commit 4d28ea257c8411319a232170fcdbae7c576c27e5
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Feb 7 10:59:27 2022 -0500
+
+    adds const for answers and private_key_file_dir, adds TODOs from meeting with Nate (still need to organize these), started breakout (unchaining) of functions so that return values are not calling another function - started with privateKeyFileDirRead() and userInitMint(), changes private key file naming convention to 'wallet_<wallet number>.txt', as such adjusts flow to scan for number of files and increment to wallet_1.txt for the first file and wallet_2 for the second etc
+
+commit 3d5b792a15c3db3a9025f711c7554f94ac71f68a
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 6 13:45:06 2022 -0500
+
+    Adds TestEncryptAES(). Changed return of encryptAES() to include error. ~considering~ adding a test that triggers the error and verifies that the error is hit. Cleaned up some print statements, removed unnecessary var declarations in main.go
+
+commit d6d8bfedafe191e01d8487b7e612a951e71b557b
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Feb 6 09:11:49 2022 -0500
+
+    fixes introduced bug (refactored a return value incorrectly)
+
+commit 221a339fdd707a7ce46582f9d335a64386a3c768
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sat Feb 5 18:58:35 2022 -0500
+
+    Cleans up some comments/TODOs
+
+commit 6172e970721005acbf27dc8ae0664ef415ee24fc
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sat Feb 5 18:03:53 2022 -0500
+
+    adds utils.ExportRsaPublicKeyAsPemStr() to test the public key value before encryption and after decryption. Adds file description to wallet/generate.go. RSA encryption and decryption seems to be working
+
+commit 96caf4d39e81751f1359300f6aba680ec43cddd5
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sat Feb 5 12:30:08 2022 -0500
+
+    Implements methods from melvinvivas blog, seems to be working, need to write tests + do further testing
+
+commit 2a93177396136a6214ed07b087d84368bd2bf438
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 3 21:55:25 2022 -0500
+
+    Edits comments and TODOs, removes deprecated README.md
+
+commit 2a028da1990c8f89f9217de885bec03c83505319
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Feb 3 21:35:12 2022 -0500
+
+    adds New() function for candidate. Fixes mint.Mint() function candidate imports (minor). In generate.go - cleans up the user flow to reflect how we want the program to run --> if the user has a wallet find it, and confirm they wish to start minting, if there is no wallet create one, if there are multiple wallets which one would the user like to use to mint... This flow was broken out where possible, but there is a good chunk of talking to the user, can be refactored further most likely. Note there are still print statments scattered about from when the encrypt/decryptAES testing was being done. Also Note - not too sure it's possible to test functions with a bunch of user input... see: https://stackoverflow.com/questions/17456901/how-to-write-tests-against-user-input-in-go
+
+commit a910e043cac6364628fbb1511be3629f0c5e3bd8
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Wed Feb 2 19:11:55 2022 -0500
+
+    adds functions in retrieve.go - breaks up getPrivateKey() getPublicKey() getCipherText(), adds more user choice logic in generate.go, adds boltdb and update and view haystack functions, note function in mint.go isn't importing candidate correctly - on TODO list, added a bunch of TODOs. NOTE: I want to focus on understanding and getting the basic structure and flow down, and then I'll start writing many tests.
+
+commit 736f2620c2e3a9f4256c23de98541e8b03ce6e38
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Wed Feb 2 08:17:58 2022 -0500
+
+    Builds out further PrivateKeyStorageRSA() function to check for private key file existence adds some TODOs for file retrieval, pass word prompt, testing research
+
+commit 834626925229e946ca941170390050e565b17af1
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 1 22:26:29 2022 -0500
+
+    cleans up wallet/generate.go - this is now in a working state. Change variables to more appropriate + snake_case names. Created private_key_filename random generation string
+
+commit decb497699752aeb24e1cb47c55fb4be24471943
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Tue Feb 1 20:40:27 2022 -0500
+
+    organizing everything in packages, modified module line in go.mod to allow for internal imports
+
+commit 74545f6ba86d178c4fa668fd3ade01190b3b471b
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Mon Jan 31 19:24:18 2022 -0500
+
+    adds initial code for GenCandidate() this takes a *CandidateFields struct, note the candidate fields are manually initialized, this will change once we get wallet.DecryptAES() working so that we can pull these values from existing private keys that have been created. Also on the TODO list is add boltdb, so eventually we'll be reading from that. This code works but the functions need to be tested and code reviewed
+
+commit ef866311001b8fc816a2927f7b278f71f4eda884
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Jan 30 22:45:15 2022 -0500
+
+    few more README.md comments did not get in last commit
+
+commit f5346c15d8818953c98cc181a778bbd13e9d9ce4
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Jan 30 22:41:01 2022 -0500
+
+    see README.md for explanation of what's going on. Having problems with DecryptAES() the cipher text and key are good, but converting the cipher text to a []byte is causing some data loss, I think
+
+commit aced3a45e0cad60e33aa8bf943b812bf535230b0
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Sun Jan 30 16:45:12 2022 -0500
+
+    attempting to test, RunCLI() on line 19 in main.go is returning undefined even though it's in the cli.go file which is in the same package -> package main
+
+commit 6b24a7f031a77af6dd2ccf58e43848fabfc6de1f
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 19:11:39 2022 -0500
+
+    starting down the rsa road
+
+commit 052ca2d4c5a1247821474a07fb5a0ba55fd2475d
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 16:27:22 2022 -0500
+
+    this commit finishes the initial CLI parser
+
+commit 85ea398be94844531c963f7ab6a0c5f36952f048
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 16:01:08 2022 -0500
+
+    wip
+
+commit e3df1722dbf99a8c958b7f92e93f47fdb056d796
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:56:07 2022 -0500
+
+    wip
+
+commit 79382c253cca81bdead2fb47714b4e13cb984a36
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:55:45 2022 -0500
+
+    wip
+
+commit e4b90d7b3eb65d4124859044713a3c2aa3807603
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:53:56 2022 -0500
+
+    wip
+
+commit 05101525d4d3d5ad5a4fa8fb37837751c3672181
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:48:59 2022 -0500
+
+    wip
+
+commit 6149fd8211b3b12def5feda088f79dee539b1041
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:46:28 2022 -0500
+
+    wip
+
+commit b53554ec54f21bd001f1475d05a0b1d367297b93
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:41:45 2022 -0500
+
+    wip
+
+commit a71e6bcce56281a675010f1c8fcc571cdb7e9712
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:39:56 2022 -0500
+
+    wip
+
+commit 9f36b1a9e54244318cc0cd89a69fbacb5eaf3ef8
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 15:37:36 2022 -0500
+
+    wip
+
+commit 107b02d4f053309195fcd7798fc6524d00b2f8a8
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 14:03:50 2022 -0500
+
+    adding flags spacing
+
+commit 30c5bd709cfe38fad3e4830b64f7c349652af7a0
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 14:02:04 2022 -0500
+
+    adding flags error handling
+
+commit 076a82c8aaada3666e7ef7007f948eb414632d69
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 13:55:19 2022 -0500
+
+    wip
+
+commit c56fd9f5b4c6399a2fabce0cddbdcf2eb46b8505
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 13:53:39 2022 -0500
+
+    wip
+
+commit eeaf62192f1d33bf84ccdaf9f428cf2a50c0d5e8
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 13:41:13 2022 -0500
+
+    wip
+
+commit b036c02c777c0cd96edd4d406149bda451580218
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 12:33:52 2022 -0500
+
+    wip
+
+commit 4e399c8365bbee638c1f7586a5dc5c629c545238
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Fri Jan 28 12:16:07 2022 -0500
+
+    modifies git ignore
+
+commit 133cee49d2495b4da62f9ebb9cf10d245d3d11fa
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Jan 27 20:38:06 2022 -0500
+
+    changing name back to what it was
+
+commit eb309532c23323da01e49bfa9067f1d0ffa7ce48
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Jan 27 20:36:39 2022 -0500
+
+    putting files back from master for reference
+
+commit 63d97e2f7d718ebc24a38758afd224e83eed6192
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Jan 27 20:31:20 2022 -0500
+
+    moving stuff around
+
+commit b01110a3cf2df941b5f996ca421d1353246a3a6a
+Author: Patrick Skelley <songkick.skelley@gmail.com>
+Date:   Thu Jan 27 20:28:10 2022 -0500
+
+    first commit - go dist branch
+
+commit f59310fea7e732eaad5e557739b474d94917855d
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Sun Oct 17 23:54:16 2021 -0400
+
+    adjusting for k
+
+commit b6d08cc655623d1c2079fdeea77422e5f6ab429d
+Author: muoncrypto <muoncrypto@gmail.com>
+Date:   Sun Oct 17 00:06:21 2021 -0400
+
+    checking collision in both directions
+
+commit 7246b9cea4ce9c9da2bf37ee59035e8bf38eb3ef
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Sat Oct 16 13:29:57 2021 -0400
+
+    adding trial run
+
+commit 328bd167a5046313e34ac00cccf3490e4b3106fd
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Sat Oct 16 13:29:41 2021 -0400
+
+    various changes
+
+commit 84ebc33c8eaff34c6f57e82578df8a7f4d7b4956
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Thu Oct 14 22:13:44 2021 -0400
+
+    prefix match
+
+commit 45831f4e0e68a389ddc82e4bdfb7a01a8530d338
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Thu Oct 14 15:20:58 2021 -0400
+
+    adding check_iterated_collision
+
+commit 7a44c66df23b962aca324fd400ef8b7232c54fa3
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Mon Oct 11 17:37:58 2021 -0400
+
+    updating probabilities
+
+commit 0fd4e03252f3cafd8764191a3e9c5d12cac1b5ea
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Mon Oct 11 14:44:33 2021 -0400
+
+    minor changes
+
+commit a68e0278ca29d978e87b59809b0424ffbfb1b514
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Fri Oct 8 16:53:09 2021 -0400
+
+    switching to scatterplot + time limited mining
+
+commit 3227497e70304e814d64537de2634a6892890f04
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Fri Oct 8 14:18:45 2021 -0400
+
+    fixing algorithm
+
+commit 68c3fc44e3ae7ef758ae6e397936d847a815a870
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Fri Oct 8 13:30:26 2021 -0400
+
+    tabulations
+
+commit 42ca8b6211ad1d82e0775fbf1dc644de3ad85e03
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Fri Oct 8 13:05:04 2021 -0400
+
+    adding gitignore
+
+commit 0b46e2550724222ea2c1bbce34969d8ad1691c6b
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Fri Oct 8 13:01:51 2021 -0400
+
+    adding results
+
+commit 5407b81993feec5089473d2ce55b217c4f2d33da
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Fri Oct 8 13:01:33 2021 -0400
+
+    adding images
+
+commit 0c633661ed139bb4af1c78c09a19be7f67fa4234
+Author: Nathan Rapport <nathan@debian.neo.rr.com>
+Date:   Fri Oct 8 13:01:13 2021 -0400
+
+    adding distribution.py
