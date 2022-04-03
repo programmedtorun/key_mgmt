@@ -1,7 +1,7 @@
 # KAON Minting Client
 
 
-### NOTE!! Tests are out of date, please ignore them.
+#### NOTE!! Tests are out of date, please ignore them.
 
 
 Create Wallets and Mint KAON
@@ -29,11 +29,11 @@ Basic CLI Flow
 --------------
 
 
-The KAON Minter Command Line Interface (CLI) enables you to create a wallet and start
-minting KAON. Wallets are directories stored in a directory called `private_key`.
-Each wallet directory has an associated name and `.dat` files.   
-Upon initially running the program from the command line, there will be no wallet files
-present. The program will ask:
+The KAON Minting Command Line Interface (CLI) enables you to create a wallet and to start
+minting KAON, Note* Minting algorithm is not yet implemented. Wallets are directories which 
+are stored in a directory called `private_key`. Each wallet (directory) has a name and 
+associated `.dat` files. Upon initially running the program from the command line, 
+there will be no wallet files present. The program will state:
 
 
 ```
@@ -47,12 +47,12 @@ such as `. - _` are allowed.
 
 
 ```
-SUCCESS!! Your new wallet dir name is: <wallet_dir_name_you_give>
+SUCCESS!! Your new wallet name is: <wallet_dir_name_you_give>
 ```
 
 
 Now, in order to encrypt and store your private key in the wallet dir, you must 
-create a password, the password you create must be:
+create a password. The password you create must be:
 
 
 1. Alphanumeric
@@ -76,7 +76,10 @@ SUCCESS!! Your encrypted RSA private key has been stored in the file: private_ke
 
 
 At this point you may choose to mint with your newly created file, 
-`OK! let's get started on minting KAON!! Meant to mint ;). Is "<wallet_dir_name_you_give>" the wallet you wish to use to mint?` 
+
+```
+OK! let's get started on minting KAON!! Meant to mint ;). Is "<wallet_dir_name_you_give>" the wallet you wish to use to mint?
+``` 
 exit, or list files. 
 
 
