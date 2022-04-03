@@ -9,12 +9,13 @@ Create Wallets and Mint KAON
 
 
 Clone this repository to your local machine. Init the module by removing the `go.mod` file
-and running `go mod init`.
+and running `go mod init` i.e.
 
 
 ```
 rm go.mod
 go mod init github.com/programmedtorun/key_mgmt
+go mod tidy
 ```
 
 
@@ -30,10 +31,11 @@ Basic CLI Flow
 
 
 The KAON Minting Command Line Interface (CLI) enables you to create a wallet and to start
-minting KAON, Note* Minting algorithm is not yet implemented. Wallets are directories which 
-are stored in a directory called `private_key`. Each wallet (directory) has a name and 
+minting KAON, Note* Minting algorithm is not yet implemented. Minting distribution
+prototype is in `key_mgmt/original_py_dist/distribution.py`. Wallets are directories which 
+are stored in a directory called `key_mgmt/private_key`. Each wallet has a name and 
 associated `.dat` files. Upon initially running the program from the command line, 
-there will be no wallet files present. The program will state:
+there will be no wallet directories present. The program will state:
 
 
 ```
