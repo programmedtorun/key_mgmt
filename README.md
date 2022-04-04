@@ -100,6 +100,6 @@ of an existing wallet.
 Options:
 -> Type the NUMBER of the wallet you wish to use to mint KAON.
 -> Type 'c' to create a new wallet.
--> Type 'cp' to change your pass phrasetype.
+-> Type 'cp' to change your password.
 -> Type 'e' to exit.
 ```
