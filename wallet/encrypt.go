@@ -27,16 +27,16 @@ import (
 )
 
 const (
-	PASS_PHRASE_HASH_SUCCESS = "\nSUCCESS!! Your pass phrase has been hashed."
-	PASS_PHRASE_MATCH_ERROR  = "\nPass phrases do not match please try again. Enter a pass phrase.\n> "
-	PASS_PHRASE_SPACE_ERROR  = "\nYou entered a space in you pass phrase. Please enter a new pass phrase.\n> "
-	RSA_ENCRYPTED_SUCCESS    = "\nSUCCESS!! Your RSA Private Key has been encrypted."
-	PASS_PHRASE_RULES        = "Your pass phrase must be:\n-> Alphanumeric, uppercase letters OK\n-> Free of spaces\n-> Between 8 - 32 characters\n-> Special characters OK\n-> Type 'e' and hit return to exit this process\n\nEnter your new pass phrase.\n> "
-	CONFIRM_PASSWORD         = "\nType your pass phrase again, to confirm selection.\n> "
-	STORED_SUCCESS           = "\nSUCCESS!! Your %s has been stored in the file: %s"
-	HASHED_PW_FILE           = "hashed_pw.dat"
-	CIPHER_FILE              = "cipher.dat"
-	SALT_FILE                = "salt.dat"
+	PASSWORD_HASH_SUCCESS = "\nSUCCESS!! Your password has been hashed."
+	RSA_ENCRYPTED_SUCCESS = "\nSUCCESS!! Your RSA Private Key has been encrypted."
+	PASSWORD_MATCH_ERROR  = "\nPasswords do not match please try again. Enter a password.\n> "
+	PASSWORD_SPACE_ERROR  = "\nYou entered a space in you password. Please enter a new password.\n> "
+	CONFIRM_PASSWORD      = "\nType your password again, to confirm selection.\n> "
+	PASSWORD_RULES        = "Your password must be:\n-> Alphanumeric, uppercase letters OK\n-> Free of spaces\n-> Between 8 - 32 characters\n-> Special characters OK\n-> Type 'e' and hit return to exit this process\n\nEnter your new password.\n> "
+	STORED_SUCCESS        = "\nSUCCESS!! Your %s has been stored in the file: %s"
+	HASHED_PW_FILE        = "hashed_pw.dat"
+	CIPHER_FILE           = "cipher.dat"
+	SALT_FILE             = "salt.dat"
 )
 
 // InitCipherAndPassword initiates the password process
@@ -51,7 +51,7 @@ func InitCipherAndPassword(wallet_dir string, input_file *os.File) (error, bool)
 	return nil, exit
 }
 
-// SetPassword generates rsa public and private keys and prompts the user to set a passphrase
+// SetPassword generates rsa public and private keys and prompts the user to set a password
 // returns an error and bool which if true, the program will exit
 func SetPassword(wallet_dir string, input_file *os.File) (error, bool) {
 	if input_file == nil {
@@ -63,13 +63,13 @@ func SetPassword(wallet_dir string, input_file *os.File) (error, bool) {
 		return err, true
 	}
 
-	create_password_msg := fmt.Sprintf("\nCreate a pass phrase for your wallet \"%s\" "+PASS_PHRASE_RULES, wallet_dir)
+	create_password_msg := fmt.Sprintf("\nCreate a password for your wallet \"%s\" "+PASSWORD_RULES, wallet_dir)
 	hashed_password, salt, exit := createPassWord(create_password_msg, wallet_dir, input_file)
 	if exit {
 		return nil, exit
 	}
 	if len(hashed_password) == KEY_LENGTH {
-		fmt.Printf(PASS_PHRASE_HASH_SUCCESS)
+		fmt.Printf(PASSWORD_HASH_SUCCESS)
 	} else {
 		return fmt.Errorf("Hashed password must be 32 bytes, length was: %v", len(hashed_password)), true
 	}
@@ -113,6 +113,7 @@ func createPassWord(prompt, wallet_dir string, input_file *os.File) ([]byte, []b
 	return password_hashed_bytes, rand_salt_bytes, false
 }
 
+// passwordConfirmLoop asks the user to type their chosen password in a 2nd time, for verification
 func passwordConfirmLoop(prompt, wallet_dir string, input_file *os.File) string {
 	var final_password string
 	var confirm_failed bool = true
@@ -127,7 +128,7 @@ func passwordConfirmLoop(prompt, wallet_dir string, input_file *os.File) string 
 		password_second_entry := getPassword(CONFIRM_PASSWORD, input_file)
 		if password_first_entry != password_second_entry {
 			confirm_failed = true
-			password_first_entry = validationLoop(PASS_PHRASE_MATCH_ERROR, input_file)
+			password_first_entry = validationLoop(PASSWORD_MATCH_ERROR, input_file)
 		} else {
 			confirm_failed = false
 			final_password = password_first_entry
@@ -140,19 +141,19 @@ func passwordConfirmLoop(prompt, wallet_dir string, input_file *os.File) string 
 // proper then the loop updates the prompt requesting a stronger
 // password. validationLoop continues to ask for and check user input until valid.
 // User may blow out of the program instead of setting a password by typing 'e' [e]xit
-func validationLoop(prompt string, input_file *os.File) (pass_phrase1 string) {
+func validationLoop(prompt string, input_file *os.File) (password string) {
 	var try_again bool = true
 	for try_again {
-		pass_phrase1 = getPassword(prompt, input_file)
-		if pass_phrase1 == EXIT {
+		password = getPassword(prompt, input_file)
+		if password == EXIT {
 			try_again = false
 		} else {
-			if !validate(pass_phrase1) {
+			if !validate(password) {
 				try_again = true
-				if pass_phrase1 == SPACE_ERROR {
-					prompt = PASS_PHRASE_SPACE_ERROR
+				if password == SPACE_ERROR {
+					prompt = PASSWORD_SPACE_ERROR
 				} else {
-					new_prompt := fmt.Sprintf("\nPlease create a stronger pass phrase.\n\nThe length of your pass phrase was %v. "+PASS_PHRASE_RULES, len(pass_phrase1))
+					new_prompt := fmt.Sprintf("\nPlease create a stronger password.\n\nThe length of your password was %v. "+PASSWORD_RULES, len(password))
 					prompt = new_prompt
 				}
 			} else {
@@ -247,7 +248,7 @@ func encryptAndStore(wallet_dir string, input_file *os.File, private_key_bytes, 
 	return nil
 }
 
-// encryptAES encrypts a string with a key - a 32 byte hashed pass phrase
+// encryptAES encrypts a string with a key - a 32 byte hashed password
 func encryptAES(key, pem_bytes_to_encryp []byte) ([]byte, error) {
 	if len(key) != KEY_LENGTH {
 		err := fmt.Sprintf("Key length should be 32 bytes. Passed key length was: %v\n. KEY_LENGTH const should not be changed from 32, KEY_LENGTH const was: %v.", len(key), KEY_LENGTH)

@@ -99,7 +99,7 @@ func UserSelectDir(dirs []fs.FileInfo, input_file *os.File, selection_prompt, on
 		case EXIT:
 			return
 		case CHANGE_PASSWORD:
-			return caseChangePassPhrase(single_dir, one_dir, CHANGE_PASS_PROMPT, input_file, dir_slice)
+			return caseChangePassword(single_dir, one_dir, CHANGE_PASS_PROMPT, input_file, dir_slice)
 		default:
 			selected_dir, dir_number_str, new_file, tries, continue_loop = defaultCase(dir_number_str, MANY_TRIES, dir_slice, tries, err, input_file)
 		}
@@ -169,9 +169,9 @@ func caseMint(single_dir_arg bool, one_file_arg string, selected_dir_arg string,
 	}
 }
 
-// caseChangePassPhrase runs if the CHANGE_PASSWORD switch statement is hit in UserSelectFile()
-func caseChangePassPhrase(single_file bool, one_file, prompt string, input_file *os.File, file_slice []string) (selected_file string, new_file bool) {
-	// cp suffix stands for [c]hange [p]ass phrase
+// caseChangePassword runs if the CHANGE_PASSWORD switch statement is hit in UserSelectFile()
+func caseChangePassword(single_file bool, one_file, prompt string, input_file *os.File, file_slice []string) (selected_file string, new_file bool) {
+	// cp suffix stands for [c]hange [p]assword
 	if !single_file {
 		file_number_str_cp, err := getUserAnswer(prompt, "", input_file)
 		if err != nil {
@@ -182,12 +182,12 @@ func caseChangePassPhrase(single_file bool, one_file, prompt string, input_file 
 		file_to_cp := obtainFile(file_number_str_cp, file_slice)
 		_, found := inSlice(file_slice, file_to_cp)
 		if found && file_to_cp != "" {
-			return changePassPhrase(file_to_cp, input_file), false
+			return changePassword(file_to_cp, input_file), false
 		} else {
 			return
 		}
 	} else {
-		return changePassPhrase(one_file, input_file), false
+		return changePassword(one_file, input_file), false
 	}
 }
 
@@ -216,9 +216,9 @@ func inSlice(slice []string, file_name string) (int, bool) {
 	return -1, false
 }
 
-// changePassPhrase prompts the user to put in their current pass phrase, verifies this
-// and then clears the existing file and has the user create initiate the pass phrase process with SetPassPhrase()
-func changePassPhrase(wallet_dir string, input_file *os.File) (fresh_wallet_dir string) {
+// changePassword prompts the user to put in their current password, verifies this
+// and then clears the existing file and has the user create initiate the password process with SetPassword()
+func changePassword(wallet_dir string, input_file *os.File) (fresh_wallet_dir string) {
 	if GetPublicKey(wallet_dir, input_file) != nil {
 		fresh_wallet_dir = clearFiles(wallet_dir) // file is removed but name stays the same
 		if fresh_wallet_dir == "" {
@@ -226,7 +226,7 @@ func changePassPhrase(wallet_dir string, input_file *os.File) (fresh_wallet_dir 
 		} else {
 			err, exit := SetPassword(fresh_wallet_dir, input_file)
 			if err != nil {
-				fmt.Printf("Encountered a problem resetting the pass phrase on wallet %s, error: %v\n", fresh_wallet_dir, err)
+				fmt.Printf("Encountered a problem resetting the password on wallet %s, error: %v\n", fresh_wallet_dir, err)
 				return ""
 			}
 			if exit {
@@ -241,7 +241,7 @@ func changePassPhrase(wallet_dir string, input_file *os.File) (fresh_wallet_dir 
 
 // clearFiles removes the files from the wallet dir
 // Note distructive! But if the user changes their password this creates a new key anyway, so the encrypted private key will be different
-// Note - if the user blows out of the program using [e]xit while changing their pass phrase the file name is gone
+// Note - if the user blows out of the program using [e]xit while changing their password the file name is gone
 // Note - again when a wallet file has stashes or stash references, to change a password the stashes will have to be transferred to the new file with the new password
 func clearFiles(wallet_dir string) string {
 	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
@@ -382,7 +382,7 @@ func validateAlphaNum(private_key_filename string) bool {
 }
 
 // MintConfirmation walks the user through wallet creation / use, if a new wallet is created
-// pass phrase creation is initiated. Finally MintConfirmation confirms user mint choice.
+// password creation is initiated. Finally MintConfirmation confirms user mint choice.
 func MintConfirmation(wallet_dir string, input_file *os.File) (bool, string, error) {
 	if input_file == nil {
 		input_file = os.Stdin
@@ -415,7 +415,7 @@ func MintConfirmation(wallet_dir string, input_file *os.File) (bool, string, err
 	return false, "", nil
 }
 
-// userConfirmMint asks if the user wants to start minting Kaon. Pass phrase will need to be re-entered if so.
+// userConfirmMint asks if the user wants to start minting Kaon. Password will need to be re-entered if so.
 func userConfirmMint(private_key_filename_next string, input_file *os.File) (bool, string, error) {
 	if input_file == nil {
 		input_file = os.Stdin
@@ -432,7 +432,7 @@ func userConfirmMint(private_key_filename_next string, input_file *os.File) (boo
 	return false, "", nil
 }
 
-// setupMint returns *Candidate given user provides the correct pass phrase
+// setupMint returns *Candidate given user provides the correct password
 func SetupMint(wallet_dir string, input_file *os.File) *candidate.Candidate {
 	rsa_public_key := GetPublicKey(wallet_dir, input_file)
 	if rsa_public_key != nil {
