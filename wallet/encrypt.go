@@ -1,6 +1,6 @@
 /*
   encrypt.go sets the user's password by calling InitCipherAndPassword(), the user's password
-  is salted and hashed using pbkdf2, the key is then used to encrypt a wallet file's private key
+  is salted and hashed using pbkdf2, the key is then used to encrypt a wallet's private key
 */
 
 package wallet
@@ -31,9 +31,9 @@ const (
 	PASS_PHRASE_MATCH_ERROR  = "\nPass phrases do not match please try again. Enter a pass phrase.\n> "
 	PASS_PHRASE_SPACE_ERROR  = "\nYou entered a space in you pass phrase. Please enter a new pass phrase.\n> "
 	RSA_ENCRYPTED_SUCCESS    = "\nSUCCESS!! Your RSA Private Key has been encrypted."
-	CONFIRM_PASS_PHRASE      = "\nType your pass phrase again, to confirm selection.\n> "
-	STORED_SUCCESS           = "\nSUCCESS!! Your %s has been stored in the file: %s"
 	PASS_PHRASE_RULES        = "Your pass phrase must be:\n-> Alphanumeric, uppercase letters OK\n-> Free of spaces\n-> Between 8 - 32 characters\n-> Special characters OK\n-> Type 'e' and hit return to exit this process\n\nEnter your new pass phrase.\n> "
+	CONFIRM_PASSWORD         = "\nType your pass phrase again, to confirm selection.\n> "
+	STORED_SUCCESS           = "\nSUCCESS!! Your %s has been stored in the file: %s"
 	HASHED_PW_FILE           = "hashed_pw.dat"
 	CIPHER_FILE              = "cipher.dat"
 	SALT_FILE                = "salt.dat"
@@ -65,14 +65,13 @@ func SetPassword(wallet_dir string, input_file *os.File) (error, bool) {
 
 	create_password_msg := fmt.Sprintf("\nCreate a pass phrase for your wallet \"%s\" "+PASS_PHRASE_RULES, wallet_dir)
 	hashed_password, salt, exit := createPassWord(create_password_msg, wallet_dir, input_file)
+	if exit {
+		return nil, exit
+	}
 	if len(hashed_password) == KEY_LENGTH {
 		fmt.Printf(PASS_PHRASE_HASH_SUCCESS)
 	} else {
 		return fmt.Errorf("Hashed password must be 32 bytes, length was: %v", len(hashed_password)), true
-	}
-
-	if exit {
-		return nil, exit
 	}
 
 	private_key_pem_bytes := exportRsaPrivateKeyAsPemBytes(rsa_private_key)
@@ -99,25 +98,10 @@ func createPassWord(prompt, wallet_dir string, input_file *os.File) ([]byte, []b
 	if input_file == nil {
 		input_file = os.Stdin
 	}
-	var final_password string
-	var confirm_failed bool = true
-	var password_first_entry string = validationLoop(prompt, input_file)
-	if password_first_entry == EXIT {
-		return []byte{}, []byte{}, true
-	}
 
-	for confirm_failed {
-		if password_first_entry == EXIT {
-			return []byte{}, []byte{}, true
-		}
-		password_second_entry := getPassword(CONFIRM_PASS_PHRASE, input_file)
-		if password_first_entry != password_second_entry {
-			confirm_failed = true
-			password_first_entry = validationLoop(PASS_PHRASE_MATCH_ERROR, input_file)
-		} else {
-			confirm_failed = false
-			final_password = password_first_entry
-		}
+	final_password := passwordConfirmLoop(prompt, wallet_dir, input_file)
+	if final_password == EXIT {
+		return []byte{}, []byte{}, true
 	}
 
 	rand_salt_bytes, err := generateRandomBytes(SALT_LENGTH)
@@ -127,6 +111,29 @@ func createPassWord(prompt, wallet_dir string, input_file *os.File) ([]byte, []b
 	}
 	password_hashed_bytes := pbkdf2.Key([]byte(final_password), rand_salt_bytes, 4096, 32, sha1.New)
 	return password_hashed_bytes, rand_salt_bytes, false
+}
+
+func passwordConfirmLoop(prompt, wallet_dir string, input_file *os.File) string {
+	var final_password string
+	var confirm_failed bool = true
+	var password_first_entry string = validationLoop(prompt, input_file)
+	if password_first_entry == EXIT {
+		return EXIT
+	}
+	for confirm_failed {
+		if password_first_entry == EXIT {
+			return EXIT
+		}
+		password_second_entry := getPassword(CONFIRM_PASSWORD, input_file)
+		if password_first_entry != password_second_entry {
+			confirm_failed = true
+			password_first_entry = validationLoop(PASS_PHRASE_MATCH_ERROR, input_file)
+		} else {
+			confirm_failed = false
+			final_password = password_first_entry
+		}
+	}
+	return final_password
 }
 
 // validationLoop validates user input in password creation, if it's not
