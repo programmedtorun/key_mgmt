@@ -50,7 +50,7 @@ such as `. - _` are allowed.
 
 
 ```
-SUCCESS!! Your new wallet name is: <wallet_dir_name_you_give>
+SUCCESS!! Your new wallet name is: <wallet_dir_name>
 ```
 
 
@@ -72,9 +72,9 @@ Minter will randomly salt and hash your password with 4096 iterations.
 ```
 SUCCESS!! Your pass phrase has been hashed.
 SUCCESS!! Your RSA Private Key has been encrypted.
-SUCCESS!! Your salt has been stored in the file: private_key/<wallet_dir_name_you_give>/salt.dat
-SUCCESS!! Your hashed password has been stored in the file: private_key/<wallet_dir_name_you_give>/hashed_pw.dat
-SUCCESS!! Your encrypted RSA private key has been stored in the file: private_key/<wallet_dir_name_you_give>/cipher.dat
+SUCCESS!! Your salt has been stored in the file: private_key/<wallet_dir_name>/salt.dat
+SUCCESS!! Your hashed password has been stored in the file: private_key/<wallet_dir_name>/hashed_pw.dat
+SUCCESS!! Your encrypted RSA private key has been stored in the file: private_key/<wallet_dir_name>/cipher.dat
 ```
 
 
