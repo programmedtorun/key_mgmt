@@ -38,7 +38,7 @@ func GetPublicKey(wallet_dir string, input_file *os.File) *rsa.PublicKey {
 	var rsa_private_key *rsa.PrivateKey
 	var attempts_left int = 3
 	var generated_hashed_password []byte
-	var retrieved_hashed_password = getHashedPassword(wallet_dir)
+	var retrieved_hashed_password = getData(wallet_dir, HASHED_PW_FILE)
 	for try_again {
 		generated_hashed_password = obtainPassword(PASSWORD_PROMPT, wallet_dir, input_file)
 		if string(generated_hashed_password) != string(retrieved_hashed_password) {
@@ -65,7 +65,7 @@ func GetPublicKey(wallet_dir string, input_file *os.File) *rsa.PublicKey {
 // getPrivateKey takes the users pbkdf2 hashed password and the wallet directory name
 // in which the *rsa.PrivateKey is encrypted and stored. Returns *rsa.PrivateKey
 func getPrivateKey(hashed_password []byte, wallet_dir string) (*rsa.PrivateKey, error) {
-	cipher_text_bytes := getCipher(wallet_dir)
+	cipher_text_bytes := getData(wallet_dir, CIPHER_FILE)
 	return decryptAES(hashed_password, cipher_text_bytes)
 }
 
@@ -83,41 +83,19 @@ func obtainPassword(prompt, wallet_dir string, input_file *os.File) []byte {
 	if err != nil {
 		fmt.Printf("User input error: %v", err)
 	}
-	salt_bytes := getSalt(wallet_dir)
+	salt_bytes := getData(wallet_dir, SALT_FILE)
 	hashed_password := pbkdf2.Key([]byte(password), salt_bytes, 4096, 32, sha1.New) //use sha256.New store
 	return hashed_password
 }
 
-func getCipher(wallet_dir string) []byte {
+func getData(wallet_dir, file_name string) []byte {
 	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
-	f := path.Join(private_key_file_dir, wallet_dir, CIPHER_FILE)
-	retrieved_cipher, err := os.ReadFile(f)
+	f := path.Join(private_key_file_dir, wallet_dir, file_name)
+	data, err := os.ReadFile(f)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return retrieved_cipher
-}
-
-// getHashedPassword returns the 32 length []byte key that was stored
-func getHashedPassword(wallet_dir string) []byte {
-	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
-	f := path.Join(private_key_file_dir, wallet_dir, HASHED_PW_FILE)
-	hashed_password, err := os.ReadFile(f)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return hashed_password
-}
-
-// getSalt returns the []byte salt slice
-func getSalt(wallet_dir string) []byte {
-	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
-	f := path.Join(private_key_file_dir, wallet_dir, SALT_FILE)
-	salt, err := os.ReadFile(f)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return salt
+	return data
 }
 
 // decryptAES decrypts cipher text and returns *rsa.PrivateKey

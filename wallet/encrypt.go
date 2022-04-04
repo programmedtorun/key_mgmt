@@ -31,9 +31,12 @@ const (
 	RSA_ENCRYPTED_SUCCESS = "\nSUCCESS!! Your RSA Private Key has been encrypted."
 	PASSWORD_MATCH_ERROR  = "\nPasswords do not match please try again. Enter a password.\n> "
 	PASSWORD_SPACE_ERROR  = "\nYou entered a space in you password. Please enter a new password.\n> "
+	HASHED_PW_DESCRIPTOR  = "hashed password"
+	CIPHER_DESCRIPTOR     = "encrypted RSA private key"
 	CONFIRM_PASSWORD      = "\nType your password again, to confirm selection.\n> "
+	SALT_DESCRIPTOR       = "salt data"
 	PASSWORD_RULES        = "Your password must be:\n-> Alphanumeric, uppercase letters OK\n-> Free of spaces\n-> Between 8 - 32 characters\n-> Special characters OK\n-> Type 'e' and hit return to exit this process\n\nEnter your new password.\n> "
-	STORED_SUCCESS        = "\nSUCCESS!! Your %s has been stored in the file: %s"
+	STORED_SUCCESS        = "\nSUCCESS!! Your %s has been stored in the file: \n%s"
 	HASHED_PW_FILE        = "hashed_pw.dat"
 	CIPHER_FILE           = "cipher.dat"
 	SALT_FILE             = "salt.dat"
@@ -75,9 +78,17 @@ func SetPassword(wallet_dir string, input_file *os.File) (error, bool) {
 	}
 
 	private_key_pem_bytes := exportRsaPrivateKeyAsPemBytes(rsa_private_key)
-	if err = encryptAndStore(wallet_dir, input_file, private_key_pem_bytes, hashed_password, salt); err != nil {
+	cipher_text, err := encryptAES(hashed_password, private_key_pem_bytes)
+	if err != nil {
+		return err, true
+	} else {
+		fmt.Printf(RSA_ENCRYPTED_SUCCESS)
+	}
+
+	if err = writeAllData(wallet_dir, input_file, salt, hashed_password, cipher_text); err != nil {
 		return err, true
 	}
+
 	return nil, false
 }
 
@@ -216,35 +227,23 @@ func exportRsaPrivateKeyAsPemBytes(private_key *rsa.PrivateKey) []byte {
 	return private_key_pem
 }
 
-// encryptAndStore encrypts the private key and stores the cipher salt
-// and hashed password in the wallet directory
-func encryptAndStore(wallet_dir string, input_file *os.File, private_key_bytes, hashed_password, salt []byte) error {
+// writeAllData stores the cipher, salt, and hashed password in the wallet directory
+func writeAllData(wallet_dir string, input_file *os.File, salt, hashed_password, cipher_text []byte) error {
 	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
-	cipher_text, err := encryptAES(hashed_password, private_key_bytes)
-	if err != nil {
-		return err
+	file_names := []string{SALT_FILE, HASHED_PW_FILE, CIPHER_FILE}
+	file_name_descriptors := []string{SALT_DESCRIPTOR, HASHED_PW_DESCRIPTOR, CIPHER_DESCRIPTOR}
+	data_slice := [][]byte{}
+	data_slice = append(data_slice, salt)
+	data_slice = append(data_slice, hashed_password)
+	data_slice = append(data_slice, cipher_text)
+	for idx, file_name := range file_names {
+		if err := writeData(wallet_dir, file_name, data_slice[idx], input_file); err != nil {
+			return err
+		}
+		file_path := path.Join(private_key_file_dir, wallet_dir, file_name)
+		fmt.Printf(STORED_SUCCESS, file_name_descriptors[idx], file_path)
 	}
-	fmt.Printf(RSA_ENCRYPTED_SUCCESS)
-
-	if err = writeSaltToFile(wallet_dir, SALT_FILE, salt, input_file); err != nil {
-		return err
-	}
-	salt_file_path := path.Join(private_key_file_dir, wallet_dir, SALT_FILE)
-	fmt.Printf(STORED_SUCCESS, "salt", salt_file_path)
-
-	if err = writeHashedPassToFile(wallet_dir, HASHED_PW_FILE, hashed_password, input_file); err != nil {
-		return err
-	}
-	hashed_pw_file_path := path.Join(private_key_file_dir, wallet_dir, HASHED_PW_FILE)
-	fmt.Printf(STORED_SUCCESS, "hashed password", hashed_pw_file_path)
-
-	if err = WriteCipherToFile(wallet_dir, CIPHER_FILE, cipher_text, input_file); err != nil {
-		return err
-	}
-	cipher_path := path.Join(private_key_file_dir, wallet_dir, CIPHER_FILE)
-	fmt.Printf(STORED_SUCCESS, "encrypted RSA private key", cipher_path)
 	fmt.Print("\n")
-
 	return nil
 }
 
@@ -274,25 +273,7 @@ func encryptAES(key, pem_bytes_to_encryp []byte) ([]byte, error) {
 	return cipher_text_bytes, nil
 }
 
-// writeSaltToFile simply writes salt to file, if a test is running the function then file mode is 777
-func writeSaltToFile(wallet_dir, salt_filename string, salt []byte, input_file *os.File) error {
-	// TODO refactor/consolodate write to file functions
-	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
-	var file_mode fs.FileMode
-	if input_file == nil {
-		file_mode = 0600
-	} else {
-		file_mode = 0777
-	}
-	f := path.Join(private_key_file_dir, wallet_dir, salt_filename)
-	if err := os.WriteFile(f, salt, file_mode); err != nil {
-		return err
-	}
-	return nil
-}
-
-func writeHashedPassToFile(wallet_dir, filename string, hashed_password []byte, input_file *os.File) error {
-	// TODO refactor/consolodate write to file functions
+func writeData(wallet_dir, filename string, data []byte, input_file *os.File) error {
 	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
 	var file_mode fs.FileMode
 	if input_file == nil {
@@ -301,24 +282,7 @@ func writeHashedPassToFile(wallet_dir, filename string, hashed_password []byte, 
 		file_mode = 0777
 	}
 	f := path.Join(private_key_file_dir, wallet_dir, filename)
-	if err := os.WriteFile(f, hashed_password, file_mode); err != nil {
-		return err
-	}
-	return nil
-}
-
-// WriteSaltCipherToFile simply writes salt and cipher to file, if a test is running the function then file mode is 777
-func WriteCipherToFile(wallet_dir, cipher_text_filename string, cipher []byte, input_file *os.File) error {
-	// TODO refactor/consolodate write to file functions
-	private_key_file_dir := os.Getenv("PRIVATE_KEY_FILE_DIR")
-	var file_mode fs.FileMode
-	if input_file == nil {
-		file_mode = 0600
-	} else {
-		file_mode = 0777
-	}
-	f := path.Join(private_key_file_dir, wallet_dir, cipher_text_filename)
-	if err := os.WriteFile(f, cipher, file_mode); err != nil {
+	if err := os.WriteFile(f, data, file_mode); err != nil {
 		return err
 	}
 	return nil

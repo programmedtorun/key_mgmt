@@ -7,11 +7,12 @@ messages and initiates the minting process
 package cli
 
 import (
+	"bufio"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"log"
 	"os"
+	"time"
 
 	"github.com/programmedtorun/key_mgmt/mint"
 	"github.com/programmedtorun/key_mgmt/wallet"
@@ -23,8 +24,8 @@ var new_file bool
 var main_loop bool = true
 
 const (
-	WELCOME_PARAGRAPH = "This program will allow you to create a wallet, which is simply a directory containing a private key file to be used for minting KAON. The program looks in the private_key directory for wallet directories on your machine. The program will allow you to select a wallet and begin the minting process, you may also create new wallets to use for minting."
-	WALLET_FILES_MSG  = "\nFound wallet directories in the key_mgmt/private_key file directory, listed here:\n\n"
+	WELCOME_PARAGRAPH = "This program will allow you to create a wallet, which is simply \na directory containing a private key file to be used for minting \nKAON. The program looks in the private_key directory for wallet \ndirectories on your machine. The program will allow you to \nselect a wallet and begin the minting process, you may also \ncreate new wallets to use for minting."
+	WALLET_FILES_MSG  = "\nFound wallets in the key_mgmt/private_key directory, listed here:\n\n"
 	ONE_DIR_MSG       = "\nFound 1 wallet directory:"
 	INIT_MSG          = "\n\nNo wallet directories detected. Would you like to create one? Select 'y' or 'n'\n> "
 )
@@ -46,11 +47,11 @@ func Run() {
 				fmt.Println(err)
 			}
 			if wallet_dir_to_mint == wallet.LIST_FILES {
-				main_loop = true // if user selected 'l' to list files, then start the loop over again
+				main_loop = true // if user selected [l]ist files, then start the loop over again
 			} else if mint_confirmation && (wallet_dir_to_mint != wallet.LIST_FILES) {
 				can := wallet.SetupMint(wallet_dir_to_mint, nil) // User must re-enter their password to mint
 				if can != nil {
-					mint.Mint(can) // note printExit() is called after this line as the main_loop exits.
+					mint.Mint(can)
 				}
 			}
 		}
@@ -96,13 +97,21 @@ func printFoundDirs(dirs []fs.FileInfo) {
 }
 
 func printWelcome() {
-	// TODO: Change to printing line by line, or character by character.
-	content, err := ioutil.ReadFile("welcome.txt")
+	file, err := os.Open("welcome.txt")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("failed to open")
 	}
-	text := string(content)
-	fmt.Println(text)
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	var text []string
+	for scanner.Scan() {
+		text = append(text, scanner.Text())
+	}
+	file.Close()
+	for _, each_ln := range text {
+		time.Sleep(45 * time.Millisecond)
+		fmt.Println(each_ln)
+	}
 }
 
 func printExit() {
